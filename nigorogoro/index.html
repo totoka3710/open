@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ja"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>にごろごろ</title><link rel="icon" href="data:,">
+<style>
+:root{--ac:#ff8a1f;--bg:#000;--card:#121212;--line:#262626;--fg:#f2f2f2;--mut:#8d8d93;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+:root[data-theme=dark]{--bg:#1c1b20;--card:#27262c;--line:#38363f}
+:root[data-theme=dark][data-pure=on]{--bg:#000;--card:#121212;--line:#262626}
+:root[data-theme=light]{--bg:#f4f3f6;--card:#fff;--line:#e2e0e7;--fg:#1b1a1f;--mut:#6c6a75}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--fg);font:16px/1.5 "Noto Sans JP","Hiragino Sans",system-ui,sans-serif;overflow:hidden;transition:background .3s}
+#app{height:100%;position:relative;max-width:520px;margin:0 auto;overflow:hidden}
+#home{height:100%;display:flex;flex-direction:column;padding:12px 20px 18px}
+header{display:flex;justify-content:space-between;align-items:center;height:48px;flex:none}
+.logo{font-size:22px;font-weight:800;letter-spacing:.04em}.logo b{color:var(--ac)}
+.ib{background:none;border:0;color:var(--fg);width:44px;height:44px;border-radius:50%;font-size:22px;cursor:pointer}
+.ib:hover{background:var(--card)}
+.hero{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:center;align-items:center}
+.num{font-size:clamp(88px,26vh,180px);font-weight:800;line-height:1;color:var(--ac);font-variant-numeric:tabular-nums}
+.num small{font-size:.22em;color:var(--fg);margin-left:.15em;font-weight:700}
+.cap{color:var(--mut);margin-top:6px}
+.week{flex:none;background:var(--card);border-radius:20px;padding:14px 16px 10px}
+.pct{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;color:var(--mut)}.pct b{font-size:22px;color:var(--fg)}
+.bars{height:clamp(90px,20vh,150px);display:flex;align-items:flex-end;gap:8px}
+.bar{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;font-size:11px;color:var(--mut)}
+.bar i{display:block;width:100%;border-radius:6px 6px 2px 2px;background:var(--ac);opacity:.35;transition:height .5s}
+.bar:last-child i{opacity:1}.bar.ng i{background:var(--mut)}
+#settings{position:absolute;inset:0;background:var(--bg);overflow-y:auto;transform:translateY(100%);transition:transform .35s cubic-bezier(.2,.8,.2,1);padding:0 16px 40px;z-index:5}
+#settings.open{transform:none}
+.sbar{position:sticky;top:0;background:var(--bg);display:flex;justify-content:space-between;align-items:center;height:56px;z-index:2;font-size:20px;font-weight:700}
+.sec{background:var(--card);border-radius:16px;margin:12px 0;padding:0 16px}
+.sh{display:flex;justify-content:space-between;align-items:center;min-height:56px;font-weight:700}
+.fold{display:grid;grid-template-rows:1fr;transition:grid-template-rows .35s ease,opacity .3s,transform .35s;}
+.fold>.fi{overflow:hidden;min-height:0}
+.sec.off .fold{grid-template-rows:0fr;opacity:0;transform:translateY(-14px)}
+.fi>div:last-child{padding-bottom:12px}
+.r{display:flex;justify-content:space-between;align-items:center;min-height:48px;border-top:1px solid var(--line);gap:10px}
+.sw{position:relative;width:48px;height:28px;flex:none}.sw input{display:none}
+.sw i{position:absolute;inset:0;background:var(--line);border-radius:14px;transition:.25s;cursor:pointer}
+.sw i:after{content:"";position:absolute;left:3px;top:3px;width:22px;height:22px;border-radius:50%;background:#fff;transition:.25s}
+.sw input:checked+i{background:var(--ac)}.sw input:checked+i:after{transform:translateX(20px)}
+input[type=time],input[type=text],textarea{background:var(--bg);color:var(--fg);border:1px solid var(--line);border-radius:10px;padding:8px 10px;font:inherit;color-scheme:dark light}
+input[type=text]{width:100%}
+textarea{width:100%;height:260px;font:13px/1.5 ui-monospace,Consolas,monospace;resize:none}
+.days{display:flex;gap:4px;margin-top:6px}.days button{flex:1;height:32px;border-radius:50%;border:1px solid var(--line);background:none;color:var(--mut);cursor:pointer;font:inherit;font-size:13px}
+.days button.on{background:var(--ac);border-color:var(--ac);color:#000}
+.swipe{position:relative;overflow:hidden;border-top:1px solid var(--line)}
+.swipe .bg{position:absolute;inset:0;display:flex;justify-content:space-between;align-items:center;padding:0 18px;font-size:13px;font-weight:700;color:#fff}
+.swipe .bg .l{color:var(--ac)}.swipe .bg .d{background:none;color:#ff5a5a}
+.swipe .in{position:relative;background:var(--card);padding:8px 0;touch-action:pan-y;transition:transform .2s}
+.swipe .in.drag{transition:none}
+.swipe .r{border:0;min-height:40px}
+.add{width:100%;height:44px;border:1px dashed var(--ac);color:var(--ac);background:none;border-radius:12px;cursor:pointer;font:inherit;margin-top:6px}
+.grp{display:flex;justify-content:space-between;align-items:center;min-height:44px;border-top:1px solid var(--line);font-weight:600;color:var(--ac)}
+.cb{width:24px;height:24px;border-radius:7px;border:2px solid var(--mut);display:grid;place-items:center;cursor:pointer;flex:none;font-size:16px;line-height:1;color:#000;font-weight:900;background:none}
+.cb.on,.cb.mix{background:var(--ac);border-color:var(--ac)}
+.hint{color:var(--mut);font-size:12px;margin:2px 0 6px}
+.help td{padding:3px 10px 3px 0;font-size:13px;vertical-align:top}.help kbd{background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:1px 7px;font:12px ui-monospace,Consolas,monospace}
+#toasts{position:fixed;left:0;right:0;top:calc(10px + env(safe-area-inset-top,0px));display:flex;flex-direction:column;align-items:center;gap:6px;z-index:50;pointer-events:none}
+.toast{background:#222;color:#fff;border-left:4px solid var(--ac);padding:10px 14px;border-radius:12px;font-size:14px;max-width:92vw;box-shadow:0 6px 24px #0008;animation:ti .3s}
+@keyframes ti{from{opacity:0;transform:translateY(-10px)}}
+.ov{position:fixed;inset:0;pointer-events:none;z-index:20;transition:opacity .4s;opacity:0;background:#000}
+.full{position:fixed;inset:0;z-index:40;background:#000;color:#aaa;display:none;place-items:center;text-align:center;font-size:22px}
+.full.show{display:grid}.full small{display:block;font-size:13px;color:#666;margin-top:8px}
+#modal{position:fixed;inset:0;background:#000a;z-index:30;display:none;place-items:center;padding:16px}
+#modal.show{display:grid}.mb{background:var(--card);border-radius:20px;padding:18px;width:min(460px,100%)}
+.mb h3{margin:0 0 10px}.mb .btns{display:flex;gap:8px;justify-content:flex-end;margin-top:12px}
+.btn{border:0;border-radius:10px;padding:9px 16px;font:inherit;background:var(--line);color:var(--fg);cursor:pointer}.btn.p{background:var(--ac);color:#000;font-weight:700}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style></head><body>
+<div id="app"><div id="home">
+<header><div class="logo">に<b>ごろごろ</b></div><button class="ib" id="openS" aria-label="設定">☰</button></header>
+<div class="hero"><div class="num"><span id="streak">0</span><small>日連続</small></div><div class="cap">予定通りに寝れた日数</div></div>
+<div class="week"><div class="pct"><span>過去7日</span><b id="pct"></b></div><div class="bars" id="bars"></div></div>
+</div>
+<div id="settings"><div class="sbar"><span>設定</span><button class="ib" id="closeS" aria-label="閉じる">×</button></div><div id="sbody"></div></div>
+</div>
+<div class="ov" id="ovDim"></div><div class="ov" id="ovMin"></div>
+<div class="full" id="fSleep"><div>スリープ中<small>何かキーを押すか画面をタップで復帰</small></div></div>
+<div class="full" id="fLock"><div>ロック中<small>Uキーで解除 / 起きる時間を過ぎると自動解除</small></div></div>
+<div id="modal"><div class="mb" id="mbody"></div></div><div id="toasts"></div>
+<script>
+const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const DN=['月','火','水','木','金','土','日'],pad=n=>String(n).padStart(2,'0');
+const S={bed:'22:30',wake:'06:30',streak:5,sleep:[7.2,6.8,7.5,6.1,7.0,7.8,7.3],score:[100,92,100,71,95,100,100],
+ alarm:{on:true,list:[{id:1,t:'06:30',d:[1,1,1,1,1,0,0],on:true},{id:2,t:'06:40',d:[1,1,1,1,1,0,0],on:false}]},
+ sh:{on:true,g:{
+  bed:{l:'寝る時間',i:[{n:'照明を暗くする',on:true},{n:'睡眠用BGMを再生する',on:true,arg:'',al:'パスまたはURL',s:'log("睡眠用BGMを再生: "+(arg||"(未指定)"))'}]},
+  after:{l:'寝た後',i:[{n:'照明を消す',on:true},{n:'30分後に空調を止める',on:true}]},
+  wake:{l:'起きる時間',i:[{n:'照明を明るくする',on:true},{n:'カーテンを開ける',on:true},{n:'お湯を沸かす',on:false}]}}},
+ dev:{on:true,c:{dim:1,gray:1,notify:1,sleep:0,min:0,lock:0}},app:{dark:true,pure:true,ac:'#ff8a1f'}};
+const DEV={dim:'画面の明るさを下げる',gray:'画面を白黒にする',notify:'通知を表示する',sleep:'一度スリープにする',min:'画面輝度を最低にする',lock:'デバイスをロックする'};
+const CTPL=`// __name = "カスタム"       項目名
+// __at = "22:30"        時刻指定で自動実行(寝る/起きる時間のみ)
+// __arg = "引数の説明"   設定画面に引数入力欄を表示
+// 使える変数: bedtime, waketime, arg, log()
+log("カスタム実行 " + bedtime);`;
+let uid=10,clock={b:Date.now(),r:Date.now()};const now=()=>new Date(clock.b+Date.now()-clock.r);
+const hm=d=>pad(d.getHours())+':'+pad(d.getMinutes());
+function toast(m,ms=3500){const e=document.createElement('div');e.className='toast';e.textContent=m;$('#toasts').append(e);setTimeout(()=>e.remove(),ms)}
+const log=m=>toast('[スマートホーム実行] '+m);
+/* ---- home ---- */
+function home(){$('#streak').textContent=S.streak;const avg=S.score.reduce((a,b)=>a+b,0)/7;$('#pct').textContent=avg.toFixed(1)+'%';
+ $('#bars').innerHTML=S.sleep.map((h,i)=>`<div class="bar ${S.score[i]<100?'ng':''}"><span>${h.toFixed(1)}</span><i style="height:${Math.max(6,h/10*100*.7)}%"></i><span>${i==6?'今日':(7-i-1)+'日前'}</span></div>`).join('')}
+function recordDay(ok){S.sleep.shift();S.score.shift();S.sleep.push(ok?7.2:5.4);S.score.push(ok?100:62);S.streak=ok?S.streak+1:0;home();toast(ok?'予定通りに就寝: '+S.streak+'日連続':'予定時間を1分以上超過: 連続日数が0に戻りました')}
+/* ---- script engine ---- */
+function meta(s){const g=(k)=>{const m=s.match(new RegExp('^(?!\\s*//)\\s*(?:const|let|var)?\\s*'+k+'\\s*=\\s*["\'](.*?)["\']','m'));return m&&m[1]};return{name:g('__name'),at:g('__at'),arg:g('__arg')}}
+function runItem(it){const m=it.s?meta(it.s):{};try{new Function('bedtime','waketime','arg','log',it.s||'log(name)').call(null,S.bed,S.wake,it.arg||'',log)}catch(e){toast('スクリプトエラー: '+e.message)}}
+function runGroup(k){if(!S.sh.on)return;S.sh.g[k].i.forEach(it=>{if(!it.on)return;if(it.s&&meta(it.s).at)return;if(!it.s){log(it.n);return}runItem(it)})}
+/* ---- device ---- */
+const fx={dim:()=>{$('#ovDim').style.opacity=.45},min:()=>{$('#ovMin').style.opacity=.8},gray:()=>{$('#app').style.filter='grayscale(100%)'},
+ notify:()=>toast('🔔 そろそろ寝る時間です'),sleep:()=>$('#fSleep').classList.add('show'),lock:()=>$('#fLock').classList.add('show')};
+function resetDev(){$('#ovDim').style.opacity=0;$('#ovMin').style.opacity=0;$('#app').style.filter='';$('#fSleep').classList.remove('show');$('#fLock').classList.remove('show')}
+function runDev(){if(!S.dev.on)return;Object.keys(S.dev.c).forEach(k=>S.dev.c[k]&&fx[k]())}
+$('#fSleep').onclick=()=>$('#fSleep').classList.remove('show');
+/* ---- clock tick ---- */
+let last='';setInterval(()=>{const d=now(),k=hm(d);if(k===last)return;last=k;
+ if(S.alarm.on)S.alarm.list.forEach(a=>{if(a.on&&a.t===k&&a.d[(d.getDay()+6)%7])toast('⏰ アラーム '+a.t,6000)});
+ if(k===S.bed){runGroup('bed');runDev()}
+ if(k===S.wake){runGroup('wake');$('#fLock').classList.remove('show')}
+ if(S.sh.on)['bed','after','wake'].forEach(g=>S.sh.g[g].i.forEach(it=>{if(it.on&&it.s&&meta(it.s).at===k)runItem(it)}))},1000);
+/* ---- settings render ---- */
+const tog=(id,on)=>`<label class="sw"><input type="checkbox" data-t="${id}" ${on?'checked':''}><i></i></label>`;
+const sec=(id,t,on,body)=>`<section class="sec ${on?'':'off'}" id="sec-${id}"><div class="sh"><span>${t}</span>${tog(id,on)}</div><div class="fold"><div class="fi"><div>${body}</div></div></div></section>`;
+function swipeRow(inner,k,i,edit){return `<div class="swipe" data-k="${k}" data-i="${i}" data-edit="${edit?1:0}"><div class="bg"><span class="l">${edit?'✎ 編集':''}</span><span class="d">削除 🗑</span></div><div class="in">${inner}</div></div>`}
+function render(){const A=S.alarm,H=S.sh,D=S.dev,P=S.app;
+ const al=A.list.map((a,i)=>swipeRow(`<div class="r"><div><input type="time" value="${a.t}" data-al="${i}"><div class="days">${DN.map((n,j)=>`<button class="${a.d[j]?'on':''}" data-ad="${i},${j}">${n}</button>`).join('')}</div></div><label class="sw"><input type="checkbox" data-ao="${i}" ${a.on?'checked':''}><i></i></label></div>`,'alarm',i,0)).join('');
+ const sh=Object.entries(H.g).map(([k,g])=>{const c=g.i.filter(x=>x.on).length,st=c==0?'':c==g.i.length?'on':'mix';
+  return `<div class="grp"><span>${g.l}</span><button class="cb ${st}" data-gc="${k}">${st=='on'?'✓':st=='mix'?'−':''}</button></div>`+g.i.map((it,i)=>{const m=it.s?meta(it.s):{};const nm=m.name||it.n;const hasArg=it.al!==undefined||m.arg;
+   return swipeRow(`<div class="r"><div style="flex:1"><div>${esc(nm)}${m.at?` <span class="hint">(${m.at}に自動実行)</span>`:''}</div>${hasArg?`<input type="text" placeholder="${esc(it.al||m.arg)}" value="${esc(it.arg||'')}" data-ia="${k},${i}">`:''}</div><button class="cb ${it.on?'on':''}" data-ic="${k},${i}">${it.on?'✓':''}</button></div>`,k,i,1)}).join('')+`<button class="add" data-cu="${k}">＋カスタム</button>`}).join('');
+ $('#sbody').innerHTML=
+ `<section class="sec"><div class="sh">基本時間</div><div class="r"><span>寝る時間</span><input type="time" id="tb" value="${S.bed}"></div><div class="r"><span>起きる時間</span><input type="time" id="tw" value="${S.wake}"></div></section>`+
+ sec('alarm','アラーム',A.on,al+`<button class="add" id="addAl">＋追加</button><div class="hint">左スワイプで削除</div>`)+
+ sec('sh','スマートホーム連動',H.on,sh+`<div class="hint">左スワイプで削除 / 右スワイプでスクリプト編集</div>`)+
+ sec('dev','デバイス制御',D.on,Object.entries(DEV).map(([k,l])=>`<div class="r"><span>${l}</span><button class="cb ${D.c[k]?'on':''}" data-dc="${k}">${D.c[k]?'✓':''}</button></div>`).join(''))+
+ `<section class="sec"><div class="sh">アプリ設定</div><div class="r"><span>ダークモード</span>${tog('dark',P.dark)}</div><div class="r"><span>ピュアブラック</span>${tog('pure',P.pure)}</div><div class="r"><span>アクセントカラー</span><input type="color" id="acc" value="${P.ac}"></div></section>`+
+ `<section class="sec"><div class="sh">モック操作・デバッグヘルプ</div><table class="help" style="padding-bottom:12px">${[['T','モック内時刻を変更'],['P','予定通りに就寝(連続日数+1)'],['O','予定超過(連続日数を0に)'],['1〜6','デバイス制御を強制発動(輝度低下/白黒/通知/スリープ/最低輝度/ロック)'],['0','デバイス制御をすべて解除'],['U','ロック解除'],['B / V / W','スマートホーム 寝る時間 / 寝た後(AI検知) / 起きる時間 を強制実行'],['Esc','設定を閉じる']].map(r=>`<tr><td><kbd>${r[0]}</kbd></td><td>${r[1]}</td></tr>`).join('')}</table></section>`}
+/* ---- settings events ---- */
+const rootEl=document.documentElement;
+function theme(){rootEl.dataset.theme=S.app.dark?'dark':'light';rootEl.dataset.pure=S.app.pure?'on':'off';rootEl.style.setProperty('--ac',S.app.ac)}
+const sb=$('#sbody');
+sb.addEventListener('change',e=>{const t=e.target,d=t.dataset;
+ if(t.id=='tb')S.bed=t.value;else if(t.id=='tw')S.wake=t.value;else if(t.id=='acc'){S.app.ac=t.value;theme()}
+ else if(d.t){const v=t.checked;if(d.t=='alarm')S.alarm.on=v;else if(d.t=='sh')S.sh.on=v;else if(d.t=='dev')S.dev.on=v;else if(d.t=='dark'){S.app.dark=v;theme()}else if(d.t=='pure'){S.app.pure=v;theme()}
+  if(['alarm','sh','dev'].includes(d.t))$('#sec-'+d.t).classList.toggle('off',!v)}
+ else if(d.al)S.alarm.list[d.al].t=t.value;else if(d.ao)S.alarm.list[d.ao].on=t.checked});
+sb.addEventListener('input',e=>{const d=e.target.dataset;if(d.ia){const[k,i]=d.ia.split(',');S.sh.g[k].i[i].arg=e.target.value}});
+sb.addEventListener('click',e=>{const b=e.target.closest('button');if(!b||b.closest('.swipe .in.moved'))return;const d=b.dataset;
+ if(d.ad){const[i,j]=d.ad.split(',');S.alarm.list[i].d[j]^=1;b.classList.toggle('on')}
+ else if(b.id=='addAl'){S.alarm.list.push({id:uid++,t:'07:00',d:[1,1,1,1,1,1,1],on:true});keep()}
+ else if(d.gc){const g=S.sh.g[d.gc],all=g.i.every(x=>x.on);g.i.forEach(x=>x.on=!all);keep()}
+ else if(d.ic){const[k,i]=d.ic.split(',');S.sh.g[k].i[i].on^=1;keep()}
+ else if(d.dc){S.dev.c[d.dc]^=1;keep()}
+ else if(d.cu){const it={n:'カスタム',on:true,s:CTPL};S.sh.g[d.cu].i.push(it);editor(d.cu,S.sh.g[d.cu].i.length-1)}});
+function keep(){const y=$('#settings').scrollTop;render();$('#settings').scrollTop=y}
+/* ---- swipe ---- */
+let sw=null;
+sb.addEventListener('pointerdown',e=>{const r=e.target.closest('.swipe');if(!r||e.target.closest('input,button'))return;sw={r,in:r.querySelector('.in'),x:e.clientX,dx:0};sw.in.classList.add('drag')});
+addEventListener('pointermove',e=>{if(!sw)return;sw.dx=e.clientX-sw.x;if(sw.r.dataset.edit!='1'&&sw.dx>0)sw.dx=0;sw.in.style.transform=`translateX(${sw.dx}px)`});
+addEventListener('pointerup',()=>{if(!sw)return;const{r,dx}=sw,k=r.dataset.k,i=+r.dataset.i;sw.in.classList.remove('drag');sw.in.style.transform='';sw=null;
+ if(dx<-80){if(k=='alarm')S.alarm.list.splice(i,1);else S.sh.g[k].i.splice(i,1);keep()}
+ else if(dx>80&&r.dataset.edit=='1')editor(k,i)});
+/* ---- editor modal ---- */
+function editor(k,i){const it=S.sh.g[k].i[i];if(!it.s)it.s=`log(${JSON.stringify(it.n)})`;
+ $('#mbody').innerHTML=`<h3>スクリプト編集</h3><textarea id="ta" spellcheck="false">${esc(it.s)}</textarea><div class="btns"><button class="btn" id="mc">キャンセル</button><button class="btn p" id="ms">保存</button></div>`;
+ $('#modal').classList.add('show');$('#mc').onclick=()=>{$('#modal').classList.remove('show');keep()};
+ $('#ms').onclick=()=>{it.s=$('#ta').value;$('#modal').classList.remove('show');keep()}}
+/* ---- keys ---- */
+$('#openS').onclick=()=>{render();$('#settings').classList.add('open')};$('#closeS').onclick=()=>$('#settings').classList.remove('open');
+addEventListener('keydown',e=>{if(e.target.closest('input,textarea'))return;const k=e.key;
+ if($('#fSleep').classList.contains('show')){$('#fSleep').classList.remove('show');return}
+ if(k=='Escape'){$('#settings').classList.remove('open');$('#modal').classList.remove('show')}
+ else if(k=='t'||k=='T'){e.preventDefault();$('#mbody').innerHTML=`<h3>モック内時刻を変更</h3><input type="time" id="ti" value="${hm(now())}"><div class="btns"><button class="btn" id="mc">キャンセル</button><button class="btn p" id="ms">変更</button></div>`;$('#modal').classList.add('show');
+  $('#mc').onclick=()=>$('#modal').classList.remove('show');$('#ms').onclick=()=>{const[h,m]=$('#ti').value.split(':'),d=now();d.setHours(+h,+m,0,0);clock={b:d.getTime()-1000,r:Date.now()};$('#modal').classList.remove('show');toast('モック時刻: '+$('#ti').value)}}
+ else if(k=='p'||k=='P')recordDay(true);else if(k=='o'||k=='O')recordDay(false);
+ else if(k>='1'&&k<='6'){const n=Object.keys(DEV)[k-1];fx[n]();toast('強制発動: '+DEV[n])}
+ else if(k=='0'){resetDev()}else if(k=='u'||k=='U')$('#fLock').classList.remove('show');
+ else if(k=='b'||k=='B'){runGroup('bed');runDev()}else if(k=='v'||k=='V')runGroup('after');else if(k=='w'||k=='W'){runGroup('wake');resetDev()}});
+theme();home();
+</script></body></html>
